@@ -10,8 +10,7 @@ Food::Food(int x, int y)
 	points = 1;
 	body = ".";
 
-	posX = x;
-	posY = y;
+	pos = Point(x, y);
 }
 
 int Food::getPoints()

@@ -8,8 +8,7 @@ Pacman::Pacman(int x, int y)
 {
 	body = "Pa";
 
-	posX = x;
-	posY = y;
+	pos = Point(x, y);
 }
 
 std::string Pacman::getBody()

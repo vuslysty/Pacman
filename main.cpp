@@ -6,6 +6,8 @@
 #include "Pacman.hpp"
 #include "Food.hpp"
 #include <map>
+#include "Graph.hpp"
+
 
 void	drawMap(std::vector<std::string> &map)
 {
@@ -20,32 +22,38 @@ void	drawFood(std::map<int, std::vector<Food > > &food)
 	for (std::map<int, std::vector<Food > >::iterator m = food.begin(); m != food.end(); m++)
 	{
 		for (std::vector<Food>::iterator f = (*m).second.begin(); f != (*m).second.end(); f++)
-			mvprintw((*f).posY, (*f).getPosX(), (*f).getBody().c_str());
+			mvprintw((*f).getPos().getY(), (*f).getPos().getX(), (*f).getBody().c_str());
 	}
 }
 
-bool	canMove(std::vector<std::string> &map, int x, int y, Pacman &man)
+bool	canMove(std::vector<std::string> &map, Point pos)
 {
-	return (map[man.posY + y][man.posX + x] == ' ' &&
-			map[man.posY + y][man.posX + x + 1] == ' ');
+	for (int i = 0; i < 2; i++)
+	{
+		if (map[pos.getY()][pos.getX() + i] != ' ')
+			return false;
+	}
+
+	return true;
 }
 
 void	eatFood(Pacman &man, std::map<int, std::vector<Food > > &food)
 {
-	int	row = man.getPosY();
+	int	row = man.getPos().getY();
 
 	if (food[row].size())
-	{
 		for (std::vector<Food>::iterator f = food[row].begin(); f != food[row].end(); f++)
 		{
-			if ((*f).getPosY() == man.getPosY() &&
-				((*f).getPosX() == man.getPosX() || (*f).getPosX() == man.getPosX() + 1))
+			Point	manPos1(man.getPos());
+			Point	manPos2(man.getPos());
+
+			manPos2.incrementX();
+			if ((*f).getPos() == manPos1 || (*f).getPos() == manPos2)
 			{
 				food[row].erase(f);
 				return ;
 			}
 		}
-	}
 }
 
 void	fillFoodOnMap(std::vector<std::string> &map,
@@ -81,8 +89,8 @@ int main()
 
 	fillFoodOnMap(map, food);
 
-//	for (std::vector<std::string>::iterator m = map.begin(); m != map.end(); m++)
-//		std::cout << *m << std::endl;
+
+	Graph	graph(map);
 
 	initscr();
 	curs_set(0);
@@ -90,6 +98,9 @@ int main()
 	keypad(stdscr, TRUE);
 
 	Pacman	man(38, 32);
+
+	if (graph.isCellInMassive(Point(38, 32)))
+		std::cout << "yeeeees";
 
 	nodelay(stdscr, TRUE);
 
@@ -99,19 +110,21 @@ int main()
 		drawFood(food);
 		eatFood(man, food);
 
-		mvprintw(man.getPosY(), man.getPosX(), "%s", (man.getBody()).c_str());
+		mvprintw(man.getPos().getY(), man.getPos().getX(), "%s", (man.getBody()).c_str());
 
 		int ch = getch();
 
-		if (ch == KEY_DOWN && canMove(map, 0, 1, man))
-			man.changePos(0, 1);
-		if (ch == KEY_UP && canMove(map, 0, -1, man))
-			man.changePos(0, -1);
-		if (ch == KEY_LEFT && canMove(map, -1, 0, man))
-			man.changePos(-1, 0);
-		if (ch == KEY_RIGHT && canMove(map, 1, 0, man))
-			man.changePos(1, 0);
-		if (ch == 27)
+		Point	manPos = man.getPos();
+
+		if (ch == KEY_DOWN && graph.isCellInMassive(manPos = man.getPos().tmpIncrementY()))
+			man.setPos(manPos);
+		else if (ch == KEY_UP && graph.isCellInMassive(manPos = man.getPos().tmpDecrementY()))
+			man.setPos(manPos);
+		else if (ch == KEY_LEFT && graph.isCellInMassive(manPos = man.getPos().tmpDecrementX()))
+			man.setPos(manPos);
+		else if (ch == KEY_RIGHT && graph.isCellInMassive(manPos = man.getPos().tmpIncrementX()))
+			man.setPos(manPos);
+		else if (ch == 27)
 			break ;
 
 //		clear();
@@ -119,61 +132,9 @@ int main()
 //		refresh();
 	}
 
-
-
-
-
 	endwin();
 
 
 
 	return 0;
 }
-//
-//	initscr();
-//	curs_set(0);
-//	noecho();
-//	keypad(stdscr, TRUE);
-//
-//	int x = 5;
-//	int y = 5;
-//
-//	Pacman	man(37, 32);
-//
-//	nodelay(stdscr, TRUE);
-//
-//	for (;;)
-//	{
-//		drawMap(map);
-////		mvprintw(y, x, "X");
-////
-////		int ch = getch();
-////		if (ch == KEY_DOWN)  y++;
-////		if (ch == KEY_UP)    y--;
-////		if (ch == KEY_LEFT)  x--;
-////		if (ch == KEY_RIGHT) x++;
-//
-//		clear();
-//		refresh();
-//	}
-//	endwin();
-//
-//
-//	return 0;
-//}
-
-
-
-
-
-//int main()
-//{
-//
-//	initscr();                   // Переход в curses-режим
-//	printw("Hello world!\n");  // Отображение приветствия в буфер
-//	refresh();                   // Вывод приветствия на настоящий экран
-//	getch();                     // Ожидание нажатия какой-либо клавиши пользователем
-//	endwin();                    // Выход из curses-режима. Обязательная команда.
-//
-//	return 0;
-//}

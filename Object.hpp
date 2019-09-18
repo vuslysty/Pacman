@@ -6,17 +6,26 @@
 #define PACMAN_OBJECT_HPP
 
 
+#include "Point.hpp"
+
 class Object
 {
+
+protected:
+
+	Point	pos;
+
 public:
 
-	int	posX;
-	int posY;
+	const Point &getPos() const;
 
-	int	getPosX();
-	int getPosY();
-
-	void	changePos(int x, int y);
+	void	setPos(int x, int y);
+	void	setPos(Point &p);
+//	void	setPos(Point p);
+	void	incrementX();
+	void	incrementY();
+	void	decrementX();
+	void	decrementY();
 };
 
 

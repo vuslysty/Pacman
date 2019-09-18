@@ -4,18 +4,38 @@
 
 #include "Object.hpp"
 
-int Object::getPosX()
+const Point& Object::getPos() const
 {
-	return posX;
+	return (pos);
 }
 
-int Object::getPosY()
+void Object::setPos(int x, int y)
 {
-	return posY;
+	pos.setXY(x, y);
 }
 
-void Object::changePos(int x, int y)
+void Object::setPos(Point &p)
 {
-	posX += x;
-	posY += y;
+	pos = p;
 }
+
+void Object::incrementY()
+{
+	pos.incrementY();
+}
+
+void Object::incrementX()
+{
+	pos.incrementX();
+}
+
+void Object::decrementX()
+{
+	pos.decrementX();
+}
+
+void Object::decrementY()
+{
+	pos.decrementY();
+}
+
