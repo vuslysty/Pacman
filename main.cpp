@@ -101,7 +101,7 @@ int main()
 
 	graph.bfsStart(man.getPos());
 
-	graph.printDistances();
+//	graph.printDistances();
 
 
 //	nodelay(stdscr, TRUE);

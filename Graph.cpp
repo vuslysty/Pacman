@@ -41,9 +41,17 @@ void Graph::fillGraph()
 					currPos.tmpDecrementY()
 			};
 
+			std::cout << "[" <<(*ceIterY).first << ":" << (*ceIterX).first << "]";
+			std::cout << " - ";
+
 			for (int i = 0; i < 4; i++)
 				if ( isCellInMassive( tmp[i] ) )
+				{
 					graph[currPos].push_back(&cells[tmp[i].getY()][tmp[i].getX()]);
+					std::cout << "[" << tmp[i].getY() << ":" << tmp[i].getX() << "] ";
+				}
+
+			std::cout << std::endl;
 		}
 	}
 }
@@ -114,7 +122,6 @@ void Graph::bfsStart(Point p)
 	{
 		Cell *cell = queue.back();
 
-		queue.pop();
 		for (std::vector<Cell*>::iterator ce = graph[cell->getPos()].begin();
 				ce != graph[cell->getPos()].end(); ce++)
 		{
@@ -124,5 +131,6 @@ void Graph::bfsStart(Point p)
 				queue.push(*ce);
 			}
 		}
+		queue.pop();
 	}
 }
