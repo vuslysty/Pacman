@@ -3,6 +3,8 @@
 //
 
 #include "Graph.hpp"
+#include <queue>
+#include <iostream>
 
 void Graph::fillCellMassive(std::vector<std::string> &map)
 {
@@ -66,4 +68,61 @@ Graph::Graph(std::vector<std::string> &map)
 const std::map<Point, std::vector<Cell*> >& Graph::getGraph() const
 {
 	return graph;
+}
+
+void Graph::setBigDistancesInSells()
+{
+	for (std::map<int, std::map<int, Cell> >::iterator ceIterY = cells.begin();
+		 ceIterY != cells.end(); ceIterY++)
+	{
+		for (std::map<int, Cell>::iterator ceIterX = (*ceIterY).second.begin();
+			 ceIterX != (*ceIterY).second.end(); ceIterX++)
+		{
+			(*ceIterX).second.setDistance(INT32_MAX);
+		}
+	}
+}
+
+
+void Graph::printDistances()
+{
+	for (std::map<int, std::map<int, Cell> >::iterator ceIterY = cells.begin();
+		 ceIterY != cells.end(); ceIterY++)
+	{
+		for (std::map<int, Cell>::iterator ceIterX = (*ceIterY).second.begin();
+			 ceIterX != (*ceIterY).second.end(); ceIterX++)
+		{
+			std::cout << "[" <<(*ceIterY).first << ":" << (*ceIterX).first << "]";
+			std::cout << " - " << (*ceIterX).second.getDistance() << std::endl;
+		}
+		std::cout << std::endl;
+	}
+}
+
+
+
+void Graph::bfsStart(Point p)
+{
+	std::queue<Cell*>	queue;
+
+	setBigDistancesInSells();
+	queue.push(&cells[p.getY()][p.getX()]);
+
+	cells[p.getY()][p.getX()].setDistance(0);
+
+	while (queue.size())
+	{
+		Cell *cell = queue.back();
+
+		queue.pop();
+		for (std::vector<Cell*>::iterator ce = graph[cell->getPos()].begin();
+				ce != graph[cell->getPos()].end(); ce++)
+		{
+			if ((*ce)->getDistance() > cell->getDistance())
+			{
+				(*ce)->setDistance(cell->getDistance() + 1);
+				queue.push(*ce);
+			}
+		}
+	}
 }

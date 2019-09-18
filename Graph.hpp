@@ -18,6 +18,7 @@ class Graph
 
 	void	fillCellMassive(std::vector<std::string> &map);
 	void	fillGraph();
+	void	setBigDistancesInSells();
 
 	Graph() = default;
 
@@ -27,6 +28,10 @@ public:
 
 	bool	isCellInMassive(Point p);
 	const std::map<Point, std::vector<Cell*> > &getGraph() const;
+	void	bfsStart(Point p);
+
+	void	printDistances();
+
 };
 
 

@@ -12,7 +12,7 @@ class Cell
 {
 	Point	pos;
 	int		index;
-	int		dist;
+	int		distance;
 
 	static int	indexCounter;
 
@@ -23,11 +23,14 @@ public:
 	Cell(Cell const &src);
 	Cell	&operator=(Cell const &rhs);
 
+
+	int 		getDistance() const;
 	int			getIndex() const;
-
 	int			getIndexCounter() const;
-
 	const Point	&getPos() const;
+
+
+	void 		setDistance(int dist);
 };
 
 

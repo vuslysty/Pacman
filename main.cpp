@@ -92,47 +92,49 @@ int main()
 
 	Graph	graph(map);
 
-	initscr();
-	curs_set(0);
-	noecho();
-	keypad(stdscr, TRUE);
+//	initscr();
+//	curs_set(0);
+//	noecho();
+//	keypad(stdscr, TRUE);
 
 	Pacman	man(38, 32);
 
-	if (graph.isCellInMassive(Point(38, 32)))
-		std::cout << "yeeeees";
+	graph.bfsStart(man.getPos());
 
-	nodelay(stdscr, TRUE);
+	graph.printDistances();
 
-	for (;;)
-	{
-		drawMap(map);
-		drawFood(food);
-		eatFood(man, food);
 
-		mvprintw(man.getPos().getY(), man.getPos().getX(), "%s", (man.getBody()).c_str());
-
-		int ch = getch();
-
-		Point	manPos = man.getPos();
-
-		if (ch == KEY_DOWN && graph.isCellInMassive(manPos = man.getPos().tmpIncrementY()))
-			man.setPos(manPos);
-		else if (ch == KEY_UP && graph.isCellInMassive(manPos = man.getPos().tmpDecrementY()))
-			man.setPos(manPos);
-		else if (ch == KEY_LEFT && graph.isCellInMassive(manPos = man.getPos().tmpDecrementX()))
-			man.setPos(manPos);
-		else if (ch == KEY_RIGHT && graph.isCellInMassive(manPos = man.getPos().tmpIncrementX()))
-			man.setPos(manPos);
-		else if (ch == 27)
-			break ;
-
-//		clear();
-		werase(stdscr);
-//		refresh();
-	}
-
-	endwin();
+//	nodelay(stdscr, TRUE);
+//
+//	for (;;)
+//	{
+//		drawMap(map);
+//		drawFood(food);
+//		eatFood(man, food);
+//
+//		mvprintw(man.getPos().getY(), man.getPos().getX(), "%s", (man.getBody()).c_str());
+//
+//		int ch = getch();
+//
+//		Point	manPos = man.getPos();
+//
+//		if (ch == KEY_DOWN && graph.isCellInMassive(manPos = man.getPos().tmpIncrementY()))
+//			man.setPos(manPos);
+//		else if (ch == KEY_UP && graph.isCellInMassive(manPos = man.getPos().tmpDecrementY()))
+//			man.setPos(manPos);
+//		else if (ch == KEY_LEFT && graph.isCellInMassive(manPos = man.getPos().tmpDecrementX()))
+//			man.setPos(manPos);
+//		else if (ch == KEY_RIGHT && graph.isCellInMassive(manPos = man.getPos().tmpIncrementX()))
+//			man.setPos(manPos);
+//		else if (ch == 27)
+//			break ;
+//
+////		clear();
+//		werase(stdscr);
+////		refresh();
+//	}
+//
+//	endwin();
 
 
 

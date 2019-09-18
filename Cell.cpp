@@ -12,6 +12,11 @@ Cell::Cell(int x, int y)
 	index = indexCounter++;
 }
 
+int Cell::getDistance() const
+{
+	return distance;
+}
+
 int Cell::getIndex() const
 {
 	return index;
@@ -40,4 +45,9 @@ Cell& Cell::operator=(Cell const &rhs)
 		this->index = rhs.index;
 	}
 	return *this;
+}
+
+void Cell::setDistance(int dist)
+{
+	distance = dist;
 }

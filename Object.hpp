@@ -21,7 +21,6 @@ public:
 
 	void	setPos(int x, int y);
 	void	setPos(Point &p);
-//	void	setPos(Point p);
 	void	incrementX();
 	void	incrementY();
 	void	decrementX();
