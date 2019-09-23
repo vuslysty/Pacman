@@ -17,7 +17,7 @@ protected:
 
 public:
 
-	const Point &getPos() const;
+	Point &getPos();
 
 	void	setPos(int x, int y);
 	void	setPos(Point &p);

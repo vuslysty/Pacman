@@ -27,7 +27,7 @@ public:
 	int 		getDistance() const;
 	int			getIndex() const;
 	int			getIndexCounter() const;
-	const Point	&getPos() const;
+	Point	&getPos();
 
 
 	void 		setDistance(int dist);

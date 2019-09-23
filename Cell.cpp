@@ -27,7 +27,7 @@ int Cell::getIndexCounter() const
 	return indexCounter;
 }
 
-const Point &Cell::getPos() const
+Point &Cell::getPos()
 {
 	return pos;
 }

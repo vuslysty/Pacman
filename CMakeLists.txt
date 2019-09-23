@@ -8,4 +8,3 @@ SET(LINK_FLAGS    "-lncurses")
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${LINK_FLAGS}")
 
 add_executable(Pacman main.cpp Pacman.cpp Pacman.hpp Food.cpp Food.hpp Ghost.cpp Ghost.hpp Object.cpp Object.hpp Graph.cpp Graph.hpp Cell.cpp Cell.hpp Point.cpp Point.hpp)
-add_executable(Test test.cpp)

@@ -41,17 +41,17 @@ void Graph::fillGraph()
 					currPos.tmpDecrementY()
 			};
 
-			std::cout << "[" <<(*ceIterY).first << ":" << (*ceIterX).first << "]";
-			std::cout << " - ";
+//			std::cout << "[" <<(*ceIterY).first << ":" << (*ceIterX).first << "]";
+//			std::cout << " - ";
 
 			for (int i = 0; i < 4; i++)
 				if ( isCellInMassive( tmp[i] ) )
 				{
 					graph[currPos].push_back(&cells[tmp[i].getY()][tmp[i].getX()]);
-					std::cout << "[" << tmp[i].getY() << ":" << tmp[i].getX() << "] ";
+//					std::cout << "[" << tmp[i].getY() << ":" << tmp[i].getX() << "] ";
 				}
 
-			std::cout << std::endl;
+//			std::cout << std::endl;
 		}
 	}
 }
@@ -73,9 +73,14 @@ Graph::Graph(std::vector<std::string> &map)
 	fillGraph();
 }
 
-const std::map<Point, std::vector<Cell*> >& Graph::getGraph() const
+std::map<Point, std::vector<Cell*> > &Graph::getGraph()
 {
 	return graph;
+}
+
+Cell *Graph::getCell(Point p)
+{
+	return &cells.at(p.getY()).at(p.getX());
 }
 
 void Graph::setBigDistancesInSells()
@@ -108,19 +113,18 @@ void Graph::printDistances()
 }
 
 
-
 void Graph::bfsStart(Point p)
 {
 	std::queue<Cell*>	queue;
 
 	setBigDistancesInSells();
-	queue.push(&cells[p.getY()][p.getX()]);
 
-	cells[p.getY()][p.getX()].setDistance(0);
+	queue.push(&cells[p.getY()][p.getX()]);
+	queue.back()->setDistance(0);
 
 	while (queue.size())
 	{
-		Cell *cell = queue.back();
+		Cell *cell = queue.front();
 
 		for (std::vector<Cell*>::iterator ce = graph[cell->getPos()].begin();
 				ce != graph[cell->getPos()].end(); ce++)

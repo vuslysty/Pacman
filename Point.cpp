@@ -109,3 +109,9 @@ Point Point::tmpDecrementY() const
 	tmp.decrementY();
 	return tmp;
 }
+
+std::ostream	&operator<<(std::ostream &o, Point const &rhs)
+{
+	o << "[" << rhs.getY() << ":" << rhs.getX() << "]";
+	return o;
+}

@@ -4,7 +4,7 @@
 
 #include "Object.hpp"
 
-const Point& Object::getPos() const
+Point& Object::getPos()
 {
 	return (pos);
 }

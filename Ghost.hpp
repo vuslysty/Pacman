@@ -6,14 +6,38 @@
 #define PACMAN_GHOST_HPP
 
 
-class Ghost
+#include <string>
+#include "Graph.hpp"
+#include "Object.hpp"
+#include <queue>
+#include <map>
+#include <vector>
+#include "Cell.hpp"
+
+class Ghost : public Object
 {
-	bool	isActive;
-	int		color;
+	Graph				&graph;
+	std::queue<Cell*>	*path;
+	time_t 				t;
+
+	bool				isActive;
+	int					color;
+	std::string			body;
+
+	Cell	*getMinPoint(Point point);
 
 public:
 
-	Ghost(int color);
+	Ghost(Graph &g, int x, int y);
+
+	std::string	getBody();
+
+	bool	hasSomePath();
+	void	generatePath();
+	void	goTo(Point *p);
+	void	go();
+
+	~Ghost();
 
 	void	doPassive();
 	void	doActive();

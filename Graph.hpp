@@ -26,9 +26,10 @@ public:
 
 	Graph(std::vector<std::string> &map);
 
-	bool	isCellInMassive(Point p);
-	const std::map<Point, std::vector<Cell*> > &getGraph() const;
-	void	bfsStart(Point p);
+	bool									isCellInMassive(Point p);
+	std::map<Point, std::vector<Cell*> > 	&getGraph();
+	Cell									*getCell(Point p);
+	void									bfsStart(Point p);
 
 	void	printDistances();
 

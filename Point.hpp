@@ -5,6 +5,7 @@
 #ifndef PACMAN_POINT_HPP
 #define PACMAN_POINT_HPP
 
+#include <iostream>
 
 class Point
 {
@@ -33,6 +34,8 @@ public:
 	Point			tmpDecrementX() const;
 	Point			tmpDecrementY() const;
 };
+
+std::ostream	&operator<<(std::ostream &o, Point const &rhs);
 
 
 #endif //PACMAN_POINT_HPP
