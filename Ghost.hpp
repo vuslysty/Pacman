@@ -21,7 +21,7 @@ class Ghost : public Object
 	time_t 				t;
 
 	bool				isActive;
-	int					color;
+//	int					color;
 	std::string			bodyA;
 	std::string			bodyP;
 

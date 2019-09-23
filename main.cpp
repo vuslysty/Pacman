@@ -14,14 +14,15 @@
 int 	foodCount = 0;
 
 
-void	drawMap(std::vector<std::string> &map)
+void	drawMap(std::vector<std::string> &map, Pacman &man)
 {
 	int y = 0;
 
 	for (std::vector<std::string>::iterator m = map.begin(); m != map.end(); m++)
 		mvprintw(y++, 0, (*m).c_str());
 
-	mvprintw(++y, 5, "Dots on the map: %i", foodCount);
+	mvprintw(++y, 5, "Your score: %i", man.getScore());
+	mvprintw(y, 50, "Your lives: %i", man.getLives());
 }
 
 void	drawFood(std::map<int, std::vector<Food > > &food)
@@ -52,6 +53,7 @@ void	eatFood(Pacman &man, std::map<int, std::vector<Food > > &food)
 			manPos2.incrementX();
 			if ((*f).getPos() == manPos1 || (*f).getPos() == manPos2)
 			{
+				man.scoreIncrement((*f).getPoints());
 				food[row].erase(f);
 				foodCount--;
 				return ;
@@ -69,7 +71,7 @@ void	fillFoodOnMap(std::vector<std::string> &map,
 		int col = 0;
 		while ((*m)[col] != '\0')
 		{
-			if (row >= 14 && row <= 16 && col >= 30 && col <= 51) // Ghosts base without food
+			if (row >= 13 && row <= 16 && col >= 30 && col <= 51) // Ghosts base without food
 				;
 			else if (col % 2 == 0 && (*m)[col] == ' ')
 			{
@@ -109,7 +111,11 @@ int main()
 	noecho();
 	keypad(stdscr, TRUE);
 
+
 	Pacman	man(38, 32);
+
+newLive:
+
 	Ghost	ghost[4] = {
 			Ghost(graph, 38, 16),
 			Ghost(graph, 38, 15),
@@ -136,7 +142,7 @@ int main()
 			t = clock();
 		}
 
-		drawMap(map);
+		drawMap(map, man);
 		drawFood(food);
 		eatFood(man, food);
 
@@ -183,8 +189,11 @@ int main()
 
 				ghost[i].GetAwayFrom(&man.getPos());
 
-				if (isOverlap(&man.getPos(), &ghost[i].getPos()))
+				if (!ghost[i].hasSomePath() && isOverlap(&man.getPos(), &ghost[i].getPos()))
+				{
+					man.scoreIncrement(50);
 					ghost[i].goHome();
+				}
 			}
 		}
 
@@ -215,19 +224,31 @@ int main()
 			attron(COLOR_PAIR(1));
 
 			if (fail)
-				mvprintw(5, 5, "                .-'''-.                                                                         ___      ___      ___   \n"
-							   "                   '   _    \\                  _______                             _______       .'/   \\  .'/   \\  .'/   \\  \n"
-							   "                 /   /` '.   \\                 \\  ___ `'.   .--.      __.....__    \\  ___ `'.   / /     \\/ /     \\/ /     \\ \n"
-							   " .-.          .-.   |     \\  '                  ' |--.\\  \\  |__|  .-''         '.   ' |--.\\  \\  | |     || |     || |     | \n"
-							   "  \\ \\        / /|   '      |  '                 | |    \\  ' .--. /     .-''\"'-.  `. | |    \\  ' | |     || |     || |     | \n"
-							   "   \\ \\      / / \\    \\     / /                  | |     |  '|  |/     /________\\   \\| |     |  '|/`.   .'|/`.   .'|/`.   .' \n"
-							   "    \\ \\    / /   `.   ` ..' /_    _             | |     |  ||  ||                  || |     |  | `.|   |  `.|   |  `.|   |  \n"
-							   "     \\ \\  / /       '-...-'`| '  / |            | |     ' .'|  |\\    .-------------'| |     ' .'  ||___|   ||___|   ||___|  \n"
-							   "      \\ `  /               .' | .' |            | |___.' /' |  | \\    '-.____...---.| |___.' /'   |/___/   |/___/   |/___/  \n"
-							   "       \\  /                /  | /  |           /_______.'/  |__|  `.             .'/_______.'/    .'.--.   .'.--.   .'.--.  \n"
-							   "       / /                |   `'.  |           \\_______|/           `''-...... -'  \\_______|/    | |    | | |    | | |    | \n"
-							   "   |`-' /                 '   .'|  '/                                                            \\_\\    / \\_\\    / \\_\\    / \n"
-							   "    '..'                   `-'  `--'                                                              `''--'   `''--'   `''--'  ");
+			{
+				man.liveDecrement();
+
+				if (man.getLives())
+				{
+					man.setPos(38,32);
+					fail = false;
+					goto newLive;
+				}
+
+				mvprintw(5, 5,
+						 "                .-'''-.                                                                         ___      ___      ___   \n"
+						 "                   '   _    \\                  _______                             _______       .'/   \\  .'/   \\  .'/   \\  \n"
+						 "                 /   /` '.   \\                 \\  ___ `'.   .--.      __.....__    \\  ___ `'.   / /     \\/ /     \\/ /     \\ \n"
+						 " .-.          .-.   |     \\  '                  ' |--.\\  \\  |__|  .-''         '.   ' |--.\\  \\  | |     || |     || |     | \n"
+						 "  \\ \\        / /|   '      |  '                 | |    \\  ' .--. /     .-''\"'-.  `. | |    \\  ' | |     || |     || |     | \n"
+						 "   \\ \\      / / \\    \\     / /                  | |     |  '|  |/     /________\\   \\| |     |  '|/`.   .'|/`.   .'|/`.   .' \n"
+						 "    \\ \\    / /   `.   ` ..' /_    _             | |     |  ||  ||                  || |     |  | `.|   |  `.|   |  `.|   |  \n"
+						 "     \\ \\  / /       '-...-'`| '  / |            | |     ' .'|  |\\    .-------------'| |     ' .'  ||___|   ||___|   ||___|  \n"
+						 "      \\ `  /               .' | .' |            | |___.' /' |  | \\    '-.____...---.| |___.' /'   |/___/   |/___/   |/___/  \n"
+						 "       \\  /                /  | /  |           /_______.'/  |__|  `.             .'/_______.'/    .'.--.   .'.--.   .'.--.  \n"
+						 "       / /                |   `'.  |           \\_______|/           `''-...... -'  \\_______|/    | |    | | |    | | |    | \n"
+						 "   |`-' /                 '   .'|  '/                                                            \\_\\    / \\_\\    / \\_\\    / \n"
+						 "    '..'                   `-'  `--'                                                              `''--'   `''--'   `''--'  ");
+			}
 			else
 				mvprintw(5, 5, "                .-'''-.                                                    ___      ___      ___   \n"
 							   "                   '   _    \\                                               .'/   \\  .'/   \\  .'/   \\  \n"
@@ -243,13 +264,12 @@ int main()
 							   "   |`-' /                 '   .'|  '/                           |  |   |  | \\_\\    / \\_\\    / \\_\\    / \n"
 							   "    '..'                   `-'  `--'                            '--'   '--'  `''--'   `''--'   `''--'  ");
 
+			mvprintw(30, 60, "SCORE: %i", man.getScore());
+
 			attroff(COLOR_PAIR(1));
 
-			refresh();
-			getchar();
-			getchar();
-			getchar();
-			getchar();
+			while (ch != 27) //ESC
+				ch = getch();
 			break ;
 		}
 

@@ -22,8 +22,8 @@ public:
 	int			getScore();
 	std::string	getBody();
 
-	void	scoreIncrement(int num);
-	void	liveDecrement();
+	void		scoreIncrement(int num);
+	void		liveDecrement();
 
 };
 
