@@ -23,10 +23,10 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@echo "Building of $(NAME)..."
-	@clang++ -o $(NAME) $(OBJ) -lncurses
+	@clang++ -o $(NAME) $(OBJ) -lncurses -std=c++11
 
 %.o: %.cpp $(INC)
-	clang++ -o $@ -c $<
+	clang++ -std=c++11 -o $@ -c $<
 
 clean:
 	@rm -f $(OBJ)
