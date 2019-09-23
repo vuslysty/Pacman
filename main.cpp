@@ -83,6 +83,8 @@ void	fillFoodOnMap(std::vector<std::string> &map,
 
 int main()
 {
+	time_t 	t = clock();
+
 	bool	fail = false;
 	bool	win = false;
 
@@ -120,6 +122,20 @@ int main()
 
 	for (;;)
 	{
+		if (static_cast<double>(clock() - t) / CLOCKS_PER_SEC > 10.0)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				if (ghost[i].active())
+					ghost[i].doPassive();
+				else
+					ghost[i].doActive();
+			}
+
+
+			t = clock();
+		}
+
 		drawMap(map);
 		drawFood(food);
 		eatFood(man, food);
@@ -130,26 +146,46 @@ int main()
 		start_color();
 		init_pair(1, COLOR_RED, COLOR_BLACK);
 		init_pair(2, COLOR_YELLOW, COLOR_BLACK);
+		init_pair(3, COLOR_BLUE, COLOR_BLACK);
 
 		attron(COLOR_PAIR(2));
 		mvprintw(man.getPos().getY(), man.getPos().getX(), "%s", (man.getBody()).c_str());
 		attroff(COLOR_PAIR(2));
 
 		srand(time(nullptr) * time(nullptr));
+
+
 		for (int i = 0; i < 4; i++)
 		{
-			attron(COLOR_PAIR(1));
-			mvprintw(ghost[i].getPos().getY(), ghost[i].getPos().getX(), "%s",
-					 (ghost[i].getBody()).c_str());
-			attroff(COLOR_PAIR(1));
+			if (ghost[i].active())
+			{
+				attron(COLOR_PAIR(1));
+				mvprintw(ghost[i].getPos().getY(), ghost[i].getPos().getX(),
+						 "%s",
+						 (ghost[i].getBodyA()).c_str());
+				attroff(COLOR_PAIR(1));
 
-			if (i == 3)
-				ghost[i].goTo(&man.getPos());
+				if (i == 3)
+					ghost[i].goTo(&man.getPos());
+				else
+					ghost[i].go();
+
+				if (isOverlap(&man.getPos(), &ghost[i].getPos()))
+					fail = true;
+			}
 			else
-				ghost[i].go();
+			{
+				attron(COLOR_PAIR(3));
+				mvprintw(ghost[i].getPos().getY(), ghost[i].getPos().getX(),
+						 "%s",
+						 (ghost[i].getBodyP()).c_str());
+				attroff(COLOR_PAIR(3));
 
-			if (isOverlap(&man.getPos(), &ghost[i].getPos()))
-				fail = true;
+				ghost[i].GetAwayFrom(&man.getPos());
+
+				if (isOverlap(&man.getPos(), &ghost[i].getPos()))
+					ghost[i].goHome();
+			}
 		}
 
 

@@ -22,20 +22,28 @@ class Ghost : public Object
 
 	bool				isActive;
 	int					color;
-	std::string			body;
+	std::string			bodyA;
+	std::string			bodyP;
 
 	Cell	*getMinPoint(Point point);
+	Cell	*getMaxPoint(Point point);
 
 public:
 
 	Ghost(Graph &g, int x, int y);
 
-	std::string	getBody();
+	bool	active();
+
+	std::string	getBodyA();
+	std::string	getBodyP();
 
 	bool	hasSomePath();
 	void	generatePath();
+	void	generateHomePath();
+	void 	GetAwayFrom(Point *p);
 	void	goTo(Point *p);
 	void	go();
+	void	goHome();
 
 	~Ghost();
 
