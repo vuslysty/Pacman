@@ -6,7 +6,7 @@
 #include "Pacman.hpp"
 #include "Food.hpp"
 #include <map>
-#include <zconf.h>
+//#include <zconf.h>
 
 #include "Graph.hpp"
 #include "Ghost.hpp"
